@@ -1,0 +1,121 @@
+import os
+
+# File to store student data
+filename = "students.txt"
+
+# Function to add a student
+def add_student():
+    roll = input("Enter Roll No: ")
+    name = input("Enter Name: ")
+    dept = input("Enter Department: ")
+    marks = input("Enter Marks: ")
+    with open(filename, "a") as f:
+        f.write(f"{roll},{name},{dept},{marks}\n")
+    print("✅ Student added successfully!\n")
+
+# Function to view all students
+def view_students():
+    if not os.path.exists(filename):
+        print("⚠️ No records found.\n")
+        return
+    print("\n=== All Students ===")
+    with open(filename, "r") as f:
+        for line in f:
+            roll, name, dept, marks = line.strip().split(",")
+            print(f"Roll: {roll}, Name: {name}, Dept: {dept}, Marks: {marks}")
+    print()
+
+# Function to search a student
+def search_student():
+    roll_no = input("Enter Roll No to search: ")
+    found = False
+    if not os.path.exists(filename):
+        print("⚠️ No records found.\n")
+        return
+    with open(filename, "r") as f:
+        for line in f:
+            roll, name, dept, marks = line.strip().split(",")
+            if roll == roll_no:
+                print(f"✅ Found → Roll: {roll}, Name: {name}, Dept: {dept}, Marks: {marks}")
+                found = True
+    if not found:
+        print("⚠️ Student not found!\n")
+
+# Function to update student details
+def update_student():
+    roll_no = input("Enter Roll No to update: ")
+    lines = []
+    found = False
+    if not os.path.exists(filename):
+        print("⚠️ No records found.\n")
+        return
+    with open(filename, "r") as f:
+        lines = f.readlines()
+    with open(filename, "w") as f:
+        for line in lines:
+            roll, name, dept, marks = line.strip().split(",")
+            if roll == roll_no:
+                print("Enter new details:")
+                name = input("New Name: ")
+                dept = input("New Department: ")
+                marks = input("New Marks: ")
+                f.write(f"{roll},{name},{dept},{marks}\n")
+                found = True
+            else:
+                f.write(line)
+    if found:
+        print("✅ Student updated successfully!\n")
+    else:
+        print("⚠️ Student not found!\n")
+
+# Function to delete student
+def delete_student():
+    roll_no = input("Enter Roll No to delete: ")
+    lines = []
+    found = False
+    if not os.path.exists(filename):
+        print("⚠️ No records found.\n")
+        return
+    with open(filename, "r") as f:
+        lines = f.readlines()
+    with open(filename, "w") as f:
+        for line in lines:
+            roll, name, dept, marks = line.strip().split(",")
+            if roll != roll_no:
+                f.write(line)
+            else:
+                found = True
+    if found:
+        print("🗑️ Student deleted successfully!\n")
+    else:
+        print("⚠️ Student not found!\n")
+
+# Menu function
+def menu():
+    while True:
+        print("=== Student Record Management System ===")
+        print("1. Add Student")
+        print("2. View All Students")
+        print("3. Search Student")
+        print("4. Update Student")
+        print("5. Delete Student")
+        print("6. Exit")
+        choice = input("Enter choice: ")
+        if choice == "1":
+            add_student()
+        elif choice == "2":
+            view_students()
+        elif choice == "3":
+            search_student()
+        elif choice == "4":
+            update_student()
+        elif choice == "5":
+            delete_student()
+        elif choice == "6":
+            print("👋 Exiting... Goodbye!")
+            break
+        else:
+            print("⚠️ Invalid choice! Please try again.\n")
+
+# Run the program
+menu()
